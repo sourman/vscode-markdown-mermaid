@@ -13,7 +13,7 @@ async function init() {
     const lightModeTheme = configSpan?.dataset.lightModeTheme;
     const maxTextSize = configSpan?.dataset.maxTextSize;
     const enablePanZoomStr = configSpan?.dataset.enablePanZoom;
-    const enablePanZoom = enablePanZoomStr ? enablePanZoomStr == "true" : false
+    const enablePanZoom = enablePanZoomStr ? enablePanZoomStr == "true" : false;
 
     const config: MermaidConfig = {
         startOnLoad: false,
@@ -28,17 +28,17 @@ async function init() {
 
 
     if (enablePanZoom) {
-        renderMermaidBlocksWithPanZoom()
+        renderMermaidBlocksWithPanZoom();
     } else {
-        renderMermaidBlocksInElement(document.body, (mermaidContainer, content, _) => {
+        renderMermaidBlocksInElement(document.body, (mermaidContainer, content) => {
             mermaidContainer.innerHTML = content;
         });
 
         // Reset everything as pan zoom has been disabled
-        resetPanZoom()
+        resetPanZoom();
     }
 }
 
-window.addEventListener('resize', onResize)
+window.addEventListener('resize', onResize);
 window.addEventListener('vscode.markdown.updateContent', init);
 init();
