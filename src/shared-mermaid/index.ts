@@ -28,14 +28,11 @@ function renderMermaidElement(mermaidContainer: HTMLElement, index: number, writ
                 writeOut(mermaidContainer, renderResult.svg, index);
                 renderResult.bindFunctions?.(mermaidContainer);
             } catch (error) {
-                if (error instanceof Error) {
-                    const errorMessageNode = document.createElement('pre');
-                    errorMessageNode.className = 'mermaid-error';
-                    errorMessageNode.innerText = error.message;
-                    writeOut(mermaidContainer, errorMessageNode.outerHTML, index);
-                }
-
-                throw error;
+                const errorMessageNode = document.createElement('pre');
+                errorMessageNode.className = 'mermaid-error';
+                errorMessageNode.innerText = error instanceof Error ? error.message : String(error);
+                writeOut(mermaidContainer, errorMessageNode.outerHTML, index);
+                console.error('Mermaid render failed', error);
             }
         })()
     };
@@ -54,7 +51,7 @@ export async function renderMermaidBlocksInElement(root: HTMLElement, writeOut: 
 
     // We need to generate all the container ids sync, but then do the actual rendering async
     const renderPromises: Array<Promise<void>> = [];
-    const mermaidElements = root.querySelectorAll<HTMLElement>('.mermaid')
+    const mermaidElements = root.querySelectorAll<HTMLElement>('.mermaid');
     for (let i=0; i<mermaidElements.length; i++) {
         renderPromises.push(renderMermaidElement(mermaidElements[i], i, writeOut).p);
     }
@@ -63,7 +60,7 @@ export async function renderMermaidBlocksInElement(root: HTMLElement, writeOut: 
         await p;
     }
 
-    return mermaidElements.length
+    return mermaidElements.length;
 }
 
 function registerIconPacks(config: Array<{ prefix?: string; pack: string }>) {
